@@ -11,6 +11,7 @@
 
     <modules>
         <module>zss-rpc-core</module>
+        <module>zss-rpc-samples</module>
     </modules>
 
     <properties>

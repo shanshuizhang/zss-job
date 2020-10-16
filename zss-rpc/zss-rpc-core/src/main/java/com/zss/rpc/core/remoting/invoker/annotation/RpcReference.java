@@ -2,6 +2,7 @@ package com.zss.rpc.core.remoting.invoker.annotation;
 
 import com.zss.rpc.core.remoting.invoker.call.CallType;
 import com.zss.rpc.core.remoting.invoker.route.LoadBalance;
+import com.zss.rpc.core.remoting.transport.BaseClient;
 import com.zss.rpc.core.remoting.transport.Client;
 import com.zss.rpc.core.remoting.transport.impl.netty.client.NettyClient;
 import com.zss.rpc.core.serialize.Serializer;
@@ -14,7 +15,7 @@ import java.lang.annotation.*;
 @Inherited
 public @interface RpcReference {
 
-    Class<? extends Client> client() default NettyClient.class;
+    Class<? extends BaseClient> client() default NettyClient.class;
 
     Class<? extends Serializer> serializer() default Hessian2Serializer.class;
 
