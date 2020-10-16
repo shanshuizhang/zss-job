@@ -1,6 +1,7 @@
 package com.zss.rpc.core.remoting.provider;
 
 import com.zss.rpc.core.exception.RpcException;
+import com.zss.rpc.core.registry.Register;
 import com.zss.rpc.core.remoting.transport.BaseServer;
 import com.zss.rpc.core.remoting.transport.Server;
 import com.zss.rpc.core.remoting.transport.impl.netty.server.NettyServer;
@@ -10,6 +11,7 @@ import com.zss.rpc.core.serialize.Serializer;
 import com.zss.rpc.core.serialize.impl.Hessian2Serializer;
 import com.zss.rpc.core.util.IpUtil;
 import com.zss.rpc.core.util.NetUtil;
+import com.zss.rpc.core.util.ServiceKeyBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,8 @@ public class RpcProvider {
 
     private BaseServer serverInstance;
 
+    private Register registerInstance;
+
     private String ip = null;
 
     private int port = 9999;
@@ -44,6 +48,10 @@ public class RpcProvider {
     private int corePoolSize = 60;
 
     private int maxPoolSize = 300;
+
+    private Class<? extends Register> serviceRegistry = null;
+
+    private Map<String, String> serviceRegistryParam = null;
 
     private Map<String,Object> serviceData = new HashMap<>();
 
@@ -91,6 +99,14 @@ public class RpcProvider {
         this.ip = ip;
     }
 
+    public void setServiceRegistry(Class<? extends Register> serviceRegistry) {
+        this.serviceRegistry = serviceRegistry;
+    }
+
+    public void setServiceRegistryParam(Map<String, String> serviceRegistryParam) {
+        this.serviceRegistryParam = serviceRegistryParam;
+    }
+
     public void setRegistryAddress(String registryAddress) {
         this.registryAddress = registryAddress;
     }
@@ -128,10 +144,24 @@ public class RpcProvider {
         this.serializerInstance = serializer.newInstance();
         //set callback
         this.serverInstance.setStartedCallback(()->{
-            //TODO 开始注册
+            // 开始注册
+            if(serviceRegistry != null){
+                registerInstance = serviceRegistry.newInstance();
+                registerInstance.start(serviceRegistryParam);
+                if(serviceData.size() > 0){
+                    registerInstance.registry(serviceData.keySet(),registryAddress);
+                }
+            }
         });
         this.serverInstance.setStopedCallback(()->{
-            //TODO 停止注册
+            // 停止注册
+            if(registerInstance != null){
+                if(serviceData.size() > 0){
+                    registerInstance.remove(serviceData.keySet(),registryAddress);
+                }
+                registerInstance.stop();
+                registerInstance = null;
+            }
         });
         //启动服务
         this.serverInstance.start(this);
@@ -152,7 +182,7 @@ public class RpcProvider {
      * @param serviceBean
      */
     public void addService(String className,String version,Object serviceBean){
-        String serviceKey = buildServiceKey(className,version);
+        String serviceKey = ServiceKeyBuilder.buildServiceKey(className,version);
         serviceData.put(serviceKey,serviceBean);
         logger.info("zss-rpc, provider add service success. serviceKey = [{}], serviceBean = [{}]", serviceKey, serviceBean.getClass());
     }
@@ -179,7 +209,7 @@ public class RpcProvider {
         }
 
         //根据serviceKey获取serviceBean
-        String serviceKey = buildServiceKey(rpcRequest.getClassName(),rpcRequest.getVersion());
+        String serviceKey = ServiceKeyBuilder.buildServiceKey(rpcRequest.getClassName(),rpcRequest.getVersion());
         Object serviceBean = serviceData.get(serviceKey);
         if(serviceBean == null){
             rpcResponse.setErrorMsg(String.format("The service key [%s] not found.",serviceKey));
@@ -198,18 +228,5 @@ public class RpcProvider {
             rpcResponse.setErrorMsg(t.getMessage());
         }
         return rpcResponse;
-    }
-
-    /**
-     * 建造serviceKey
-     * @param className
-     * @param version
-     * @return
-     */
-    public static String buildServiceKey(String className,String version){
-        if(version != null && version.trim().length() > 0){
-            className = className + "#" + version;
-        }
-        return className;
     }
 }
