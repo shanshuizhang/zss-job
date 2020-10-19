@@ -1,2 +1,7 @@
 server:
   port: 8888
+
+logging:
+  level:
+    com:
+      zss: debug

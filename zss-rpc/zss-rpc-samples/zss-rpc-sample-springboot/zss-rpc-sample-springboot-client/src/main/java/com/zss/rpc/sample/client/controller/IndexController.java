@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/index")
 public class IndexController {
 
-    @RpcReference
+    @RpcReference(address = "127.0.0.1:9999",timeout = 6000)
     private DemoService demoService;
 
     @PostMapping("/sayHello")

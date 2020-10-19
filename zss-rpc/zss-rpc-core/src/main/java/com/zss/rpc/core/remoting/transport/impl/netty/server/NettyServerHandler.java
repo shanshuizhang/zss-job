@@ -34,6 +34,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> 
             threadPoolExecutor.execute(()->{
                 RpcResponse rpcResponse = rpcProvider.invokeService(rpcRequest);
                 channelHandlerContext.writeAndFlush(rpcResponse);
+                logger.info("zss-rpc,服务响应。。。");
             });
         } catch (Exception e){
             RpcResponse rpcResponse = new RpcResponse();

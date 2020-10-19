@@ -23,6 +23,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<RpcResponse>
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, RpcResponse rpcResponse) throws Exception {
+        logger.info("client channelRead0 执行了");
         rpcInvoker.notifyInvokerFuture(rpcResponse.getRequestId(),rpcResponse);
     }
 

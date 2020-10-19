@@ -86,6 +86,7 @@ public class RpcInvoker {
     public void notifyInvokerFuture(String requestId, final RpcResponse rpcResponse){
         // get rpcFutureResponse
         RpcFutureResponse rpcFutureResponse = futureResponseMap.get(requestId);
+        logger.info("client获取返回结果");
         if(rpcFutureResponse == null){
             return;
         }

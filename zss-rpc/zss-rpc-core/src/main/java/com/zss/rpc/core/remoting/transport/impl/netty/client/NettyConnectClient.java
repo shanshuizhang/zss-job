@@ -49,7 +49,7 @@ public class NettyConnectClient extends ConnectClient {
                 .channel(NioSocketChannel.class)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
-                    protected void initChannel(SocketChannel channel) throws Exception {
+                    public void initChannel(SocketChannel channel) throws Exception {
                         channel.pipeline()
                                 .addLast(new IdleStateHandler(0,0, Beat.BEAT_INTERVAL, TimeUnit.SECONDS))
                                 .addLast(new NettyEncoder(serializer))
@@ -59,7 +59,7 @@ public class NettyConnectClient extends ConnectClient {
                 })
                 .option(ChannelOption.TCP_NODELAY,true)
                 .option(ChannelOption.SO_KEEPALIVE,true)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,10 * 1000);
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,10000);
         this.channel = bootstrap.connect(host,port).sync().channel();
         //如果是无效连接，则关闭
         if(!isValidate()){

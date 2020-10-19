@@ -16,6 +16,7 @@
         <module>zss-rpc-sample-springboot</module>
         <module>zss-rpc-sample-springboot/zss-rpc-sample-springboot-api</module>
         <module>zss-rpc-sample-springboot/zss-rpc-sample-springboot-client</module>
+        <module>zss-rpc-sample-springboot/zss-rpc-sample-springboot-server</module>
     </modules>
 
 </project>

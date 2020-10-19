@@ -1,0 +1,7 @@
+server:
+  port: 8889
+
+# xxl-rpc
+zss-rpc:
+  remoting:
+   port: 9999
