@@ -7,7 +7,6 @@ import com.zss.rpc.core.remoting.invoker.call.RpcInvokeCallback;
 import com.zss.rpc.core.remoting.invoker.generic.RpcGenericService;
 import com.zss.rpc.core.remoting.invoker.route.LoadBalance;
 import com.zss.rpc.core.remoting.transport.BaseClient;
-import com.zss.rpc.core.remoting.transport.Client;
 import com.zss.rpc.core.remoting.transport.impl.netty.client.NettyClient;
 import com.zss.rpc.core.remoting.transport.model.RpcFutureResponse;
 import com.zss.rpc.core.remoting.transport.model.RpcRequest;
@@ -130,7 +129,7 @@ public class RpcReferenceBean {
         }
         // init serializerInstance
         this.serializerInstance = serializer.newInstance();
-        // init Client
+        // init client
         clientInstance = client.newInstance();
         clientInstance.init(this);
         return this;

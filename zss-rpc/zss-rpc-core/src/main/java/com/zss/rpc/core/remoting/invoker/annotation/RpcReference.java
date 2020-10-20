@@ -3,7 +3,6 @@ package com.zss.rpc.core.remoting.invoker.annotation;
 import com.zss.rpc.core.remoting.invoker.call.CallType;
 import com.zss.rpc.core.remoting.invoker.route.LoadBalance;
 import com.zss.rpc.core.remoting.transport.BaseClient;
-import com.zss.rpc.core.remoting.transport.Client;
 import com.zss.rpc.core.remoting.transport.impl.netty.client.NettyClient;
 import com.zss.rpc.core.serialize.Serializer;
 import com.zss.rpc.core.serialize.impl.Hessian2Serializer;

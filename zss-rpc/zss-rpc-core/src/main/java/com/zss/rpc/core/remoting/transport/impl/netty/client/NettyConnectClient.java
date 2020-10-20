@@ -26,7 +26,7 @@ public class NettyConnectClient extends ConnectClient {
     private Channel channel;
 
     @Override
-    public void init(String address, Serializer serializer, RpcInvoker rpcInvoker) throws Exception {
+    public void init(String address, final Serializer serializer, final RpcInvoker rpcInvoker) throws Exception {
         // address
         Object[] array = IpUtil.parseIpPort(address);
         String host = (String) array[0];
@@ -57,10 +57,10 @@ public class NettyConnectClient extends ConnectClient {
                                 .addLast(new NettyClientHandler(connectClient,rpcInvoker));
                     }
                 })
-                .option(ChannelOption.TCP_NODELAY,true)
-                .option(ChannelOption.SO_KEEPALIVE,true)
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,10000);
-        this.channel = bootstrap.connect(host,port).sync().channel();
+                .option(ChannelOption.TCP_NODELAY, true)
+                .option(ChannelOption.SO_KEEPALIVE, true)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 10000);
+        this.channel = bootstrap.connect(host, port).sync().channel();
         //如果是无效连接，则关闭
         if(!isValidate()){
             close();

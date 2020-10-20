@@ -16,7 +16,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<RpcResponse>
 
     private RpcInvoker rpcInvoker;
 
-    public NettyClientHandler(NettyConnectClient nettyConnectClient,RpcInvoker rpcInvoker){
+    public NettyClientHandler(NettyConnectClient nettyConnectClient,final RpcInvoker rpcInvoker){
         this.nettyConnectClient = nettyConnectClient;
         this.rpcInvoker = rpcInvoker;
     }
